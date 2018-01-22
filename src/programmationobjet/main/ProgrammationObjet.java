@@ -53,7 +53,7 @@ public class ProgrammationObjet {
         
         Fenetre formMain = new Fenetre("Menu");                     // Instanciation de Fenetre avec le titre "Menu"
         
-        /* Premier exercice, commenté car devenu innutile
+        /* Premier exercice, commenté car devenu inutile
         JFrame formMain = new JFrame();                             // Création d'un JFrame nommé formMain
         JPanel panel = new JPanel();                                // Création d'un JPanel nommé panel
 

@@ -10,6 +10,7 @@ import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.Insets;
 import java.awt.TextField;
+import java.util.ArrayList;
 import javax.swing.ButtonGroup;
 import javax.swing.JButton;
 import javax.swing.JFrame;
@@ -36,6 +37,8 @@ public class Article {
     TextField tfISBN;
     TextField tfNbPage;
     TextField tfAuteur;
+    
+    ArrayList<String> lesErreurs;
 
     //Constructeur d'Ajout (Première entré dans la fenêtre)
     public Article() {
@@ -45,38 +48,39 @@ public class Article {
 
     //Constructeur de Modification
     public Article(Object lArticle) {
-        creationForm();
-        String laClasseArticle = lArticle.getClass().toString();
+        creationForm();                                                         // Appelle la fonction de création de la fenêtre
+        String laClasseArticle = lArticle.getClass().toString();                // Permet de savoir si c'est un DVD ou un Livre
+        lesErreurs = new ArrayList<>();                                         // Instancie la liste des erreurs
 
         switch (laClasseArticle) {
-            case "Dvd":
-                lArticle = (Dvd) lArticle;
-                Dvd leDvd = new Dvd();
-                leDvd = (Dvd) lArticle;
+            case "Dvd":                                                         // Si l'objet est un DVD
+                lArticle = (Dvd) lArticle;                                      // Modifie le type de la variable Article (que l'ont modifie) en DVD
+                Dvd leDvd = new Dvd();                                          // Créer une variable de type DVD (pour travailler dessus plutôt que sur lArticle qui n'est pas parlant)
+                leDvd = (Dvd) lArticle;                                         // Met lArticle (qui est un DVD) dans la variable leDVD
 
-                tfReference.setText(leDvd.getReference());
-                tfDesignation.setText(leDvd.getReference());
-                tfPrix.setText(String.valueOf(leDvd.getPrix()));
+                tfReference.setText(leDvd.getReference());                      // Prérempli les champs avec l'objets actuel
+                tfDesignation.setText(leDvd.getReference());                    // Prérempli les champs avec l'objets actuel
+                tfPrix.setText(String.valueOf(leDvd.getPrix()));                // Prérempli les champs avec l'objets actuel
 
-                tfDuree.setText(String.valueOf(leDvd.getDuree()));
-                tfRealisateur.setText(leDvd.getRealisateur());
+                tfDuree.setText(String.valueOf(leDvd.getDuree()));              // Prérempli les champs avec l'objets actuel
+                tfRealisateur.setText(leDvd.getRealisateur());                  // Prérempli les champs avec l'objets actuel
                 break;
 
-            case "Livre":
-                lArticle = (Livre) lArticle;
-                Livre leLivre = new Livre();
-                leLivre = (Livre) lArticle;
+            case "Livre":                                                       // Si l'objet est un livre
+                lArticle = (Livre) lArticle;                                    // Modifie le type de la variable Article (que l'ont modifie) en Livre
+                Livre leLivre = new Livre();                                    // Créer une variable de type Livre (pour travailler dessus plutôt que sur lArticle qui n'est pas parlant)
+                leLivre = (Livre) lArticle;                                     // Met lArticle (qui est un Livre) dans la variable leLivre
 
-                tfReference.setText(leLivre.getReference());
-                tfDesignation.setText(leLivre.getReference());
-                tfPrix.setText(String.valueOf(leLivre.getPrix()));
+                tfReference.setText(leLivre.getReference());                    // Prérempli les champs avec l'objets actuel
+                tfDesignation.setText(leLivre.getReference());                  // Prérempli les champs avec l'objets actuel
+                tfPrix.setText(String.valueOf(leLivre.getPrix()));              // Prérempli les champs avec l'objets actuel
 
-                tfISBN.setText(leLivre.getIsbn());
-                tfNbPage.setText(String.valueOf(leLivre.getNbrPages()));
-                tfAuteur.setText(leLivre.getAuteur());
+                tfISBN.setText(leLivre.getIsbn());                              // Prérempli les champs avec l'objets actuel
+                tfNbPage.setText(String.valueOf(leLivre.getNbrPages()));        // Prérempli les champs avec l'objets actuel
+                tfAuteur.setText(leLivre.getAuteur());                          // Prérempli les champs avec l'objets actuel
                 break;
 
-            default:
+            default:                                                            // Si l'objet n'est ni un DVD ni un Livre
                 System.out.println(laClasseArticle);
                 break;
         }
@@ -110,32 +114,32 @@ public class Article {
         gbCE.insets = new Insets(5, 5, 5, 5);                                   // insets défini la marge entre les composant new Insets(margeSupérieure, margeGauche, margeInférieur, margeDroite) */
 
         gbC.gridy = 0;
-        panel.add(panelContenu, gbC);
+        panel.add(panelContenu, gbC);                                           // Ajoute un panel "panelContenu" à "panel" en position x = 0, Y = 0
         gbC.gridy = 1;
-        panel.add(PanelError, gbC);
+        panel.add(PanelError, gbC);                                             // Ajoute un panel "panelError" à "panel" en position x = 0, Y = 1
 
         // *********************
         // Panel Contenu Erreurs
         // *********************
         gbCE.gridy = 0;
         JLabel lRefError = new JLabel("X");                                     // Créer un label
-        PanelError.add(lRefError, gbCE);                                        // le label au panelContenu
+        PanelError.add(lRefError, gbCE);                                        // le label au panelContenu en position x = 0, Y = 0
 
         gbCE.gridy = 2;
         JLabel lDesignationError = new JLabel("X");                             // Créer un label
-        PanelError.add(lDesignationError, gbCE);                                // le label au panelContenu
+        PanelError.add(lDesignationError, gbCE);                                // le label au panelContenu en position x = 0, Y = 1
 
         gbCE.gridy = 4;
         JLabel lPrixError = new JLabel("X");                                    // Créer un label
-        PanelError.add(lPrixError, gbCE);                                       // le label au panelContenu
+        PanelError.add(lPrixError, gbCE);                                       // le label au panelContenu en position x = 0, Y = 4
 
         gbCE.gridy = 6;
         JLabel lObjet1Error = new JLabel("X");                                  // Créer un label
-        PanelError.add(lObjet1Error, gbCE);                                     // le label au panelContenu
+        PanelError.add(lObjet1Error, gbCE);                                     // le label au panelContenu en position x = 0, Y = 6
 
         gbCE.gridy = 8;
         JLabel lObjet2Error = new JLabel("X");                                  // Créer un label
-        PanelError.add(lObjet2Error, gbCE);                                     // le label au panelContenu
+        PanelError.add(lObjet2Error, gbCE);                                     // le label au panelContenu en position x = 0, Y = 8
 
         // ************************
         // Panel Contenu principal
@@ -143,32 +147,32 @@ public class Article {
         //Création d'un Label demande de reference
         gbCC.gridy = 0;
         JLabel lRef = new JLabel("Entrez la référence de l'article");           // Créer un label
-        panelContenu.add(lRef, gbCC);                                           // le label au panelContenu
+        panelContenu.add(lRef, gbCC);                                           // le label au panelContenu en position x = 0, Y = 0
 
         //Création d'un TextField reference
         gbCC.gridy = 1;
         tfReference = new TextField("", 50);                                    // Créer un Text Field
-        panelContenu.add(tfReference, gbCC);                                    // le Text Field au panelContenu
+        panelContenu.add(tfReference, gbCC);                                    // le Text Field au panelContenu en position x = 0, Y = 1
 
         //Création d'un Label demande de désignation
         gbCC.gridy = 2;
         JLabel lDes = new JLabel("Entrez la désignation de l'article");         // Créer un label
-        panelContenu.add(lDes, gbCC);                                           // le label au panelContenu
+        panelContenu.add(lDes, gbCC);                                           // le label au panelContenu en position x = 0, Y = 3
 
         //Création d'un TextField designation
         gbCC.gridy = 3;
         tfDesignation = new TextField("", 50);                                  // Créer un Text Field
-        panelContenu.add(tfDesignation, gbCC);                                  // le Text Field au panelContenu
+        panelContenu.add(tfDesignation, gbCC);                                  // le Text Field au panelContenu en position x = 0, Y = 3
 
         //Création d'un Label demande de prix
         gbCC.gridy = 4;
         JLabel lPrix = new JLabel("Entrez le prix de l'article");               // Créer un label
-        panelContenu.add(lPrix, gbCC);                                          // le label au panelContenu
+        panelContenu.add(lPrix, gbCC);                                          // le label au panelContenu en position x = 0, Y = 4
 
         //Création d'un TextField prix
         gbCC.gridy = 5;
         tfPrix = new TextField("", 50);                                         // Créer un Text Field
-        panelContenu.add(tfPrix, gbCC);                                         // le Text Field au panelContenu
+        panelContenu.add(tfPrix, gbCC);                                         // le Text Field au panelContenu en position x = 0, Y = 5
 
         // **********************
         //Création du panel DVD
@@ -183,19 +187,19 @@ public class Article {
         //Création d'un Label demande de durée
         gbCDVD.gridy = 0;
         JLabel lDuree = new JLabel("Entrez la durée du DVD");                   // Créer un label
-        panelDVD.add(lDuree, gbCDVD);                                           // le label au panel
+        panelDVD.add(lDuree, gbCDVD);                                           // le label au panel en position x = 0, Y = 0
         //Création d'un TextField duree
         gbCDVD.gridy = 1;
         tfDuree = new TextField("", 50);                                        // Créer un Text Field
-        panelDVD.add(tfDuree, gbCDVD);                                          // le Text Field au panel
+        panelDVD.add(tfDuree, gbCDVD);                                          // le Text Field au panel en position x = 0, Y = 1
         //Création d'un Label demande de realisateur
         gbCDVD.gridy = 2;
         JLabel lRealisateur = new JLabel("Entrez le réalisateur du DVD");       // Créer un label
-        panelDVD.add(lRealisateur, gbCDVD);                                     // le label au panel
+        panelDVD.add(lRealisateur, gbCDVD);                                     // le label au panel en position x = 0, Y = 2
         //Création d'un TextField realisateur
         gbCDVD.gridy = 3;
         tfRealisateur = new TextField("", 50);                                  // Créer un Text Field
-        panelDVD.add(tfRealisateur, gbCDVD);                                    // le Text Field au panel
+        panelDVD.add(tfRealisateur, gbCDVD);                                    // le Text Field au panel en position x = 0, Y = 3
 
         // *********************
         // Création du panel Livre
@@ -210,27 +214,27 @@ public class Article {
         //Création d'un Label demande de l'ISBN
         gbCLivre.gridy = 0;
         JLabel lIsbn = new JLabel("Entrez l'ISBN du livre");                    // Créer un label
-        panelLivre.add(lIsbn, gbCLivre);                                        // le label au panel
+        panelLivre.add(lIsbn, gbCLivre);                                        // le label au panel en position x = 0, Y = 0
         //Création d'un TextField ISBN
         gbCLivre.gridy = 1;
         tfISBN = new TextField("", 50);                                         // Créer un Text Field
-        panelLivre.add(tfISBN, gbCLivre);                                       // le Text Field au panel
+        panelLivre.add(tfISBN, gbCLivre);                                       // le Text Field au panel en position x = 0, Y = 1
         //Création d'un Label demande du nombre de pages
         gbCLivre.gridy = 2;
         JLabel lNbPage = new JLabel("Entrez le nombre de pages du livre");      // Créer un label
-        panelLivre.add(lNbPage, gbCLivre);                                      // le label au panel
+        panelLivre.add(lNbPage, gbCLivre);                                      // le label au panel en position x = 0, Y = 2
         //Création d'un TextField Nombre de pages
         gbCLivre.gridy = 3;
         tfNbPage = new TextField("", 50);                                       // Créer un Text Field
-        panelLivre.add(tfNbPage, gbCLivre);                                     // le Text Field au panel
+        panelLivre.add(tfNbPage, gbCLivre);                                     // le Text Field au panel en position x = 0, Y = 3
         //Création d'un Label demande de l'auteur
         gbCLivre.gridy = 4;
         JLabel lAuteur = new JLabel("Entrez l'auteur du livre");                // Créer un label
-        panelLivre.add(lAuteur, gbCLivre);                                      // le label au panel
+        panelLivre.add(lAuteur, gbCLivre);                                      // le label au panel en position x = 0, Y = 4
         //Création d'un TextField auteur
         gbCLivre.gridy = 5;
         tfAuteur = new TextField("", 50);                                       // Créer un Text Field
-        panelLivre.add(tfAuteur, gbCLivre);                                     // le Text Field au panel
+        panelLivre.add(tfAuteur, gbCLivre);                                     // le Text Field au panel en position x = 0, Y = 5
 
         // *************************************
         // Retour sur le Panel Contenu principal
@@ -238,33 +242,33 @@ public class Article {
         //Création du choix DVD/Livre
         gbCC.gridy = 6;
         gbCC.gridx = 0;
-        ButtonGroup bg = new ButtonGroup();
-        JPanel lesRadioButton = new JPanel();
-        JRadioButton dvd = new JRadioButton("DVD");
-        bg.add(dvd);
-        lesRadioButton.add(dvd);
-        JRadioButton livre = new JRadioButton("Livre");
-        bg.add(livre);
-        lesRadioButton.add(livre);
-        panelContenu.add(lesRadioButton, gbCC);
+        ButtonGroup bg = new ButtonGroup();                                     // Ajoute un groupe de boutons pour lier mes RadioButton
+        JPanel lesRadioButton = new JPanel();                                   // Créer un panel contenant les Radion Boutons
+        JRadioButton dvd = new JRadioButton("DVD");                             // Créer un radio bouton "DVD"
+        bg.add(dvd);                                                            // Ajoute le radio bouton au groupe de boutons
+        lesRadioButton.add(dvd);                                                // Ajoute le radio bouton au panel de boutons
+        JRadioButton livre = new JRadioButton("Livre");                         // Créer un radio bouton "Livre"
+        bg.add(livre);                                                          // Ajoute le radio bouton au groupe de boutons
+        lesRadioButton.add(livre);                                              // Ajoute le radio bouton au panel de boutons
+        panelContenu.add(lesRadioButton, gbCC);                                 // Ajoute le panel de boutons en position x = 0, Y = 6
         dvd.addActionListener((event) -> {                                      // Créer une " "micro fonction" " lorsque quelque chose se passe sur le bouton
             //Actions lors des cliques sur le bouton 
-            panelLivre.setVisible(false);
-            panelDVD.setVisible(true);
+            panelLivre.setVisible(false);                                       // Cache la partie des livres
+            panelDVD.setVisible(true);                                          // et rend visible la partie des DVD
             fenetre.pack();
         });
         livre.addActionListener((event) -> {                                    // Créer une " "micro fonction" " lorsque quelque chose se passe sur le bouton
             //Actions lors des cliques sur le bouton 
-            panelLivre.setVisible(true);
-            panelDVD.setVisible(false);
+            panelLivre.setVisible(true);                                        // Rend visible la partie des livres
+            panelDVD.setVisible(false);                                         // et cache la partie des DVD
             fenetre.pack();
         });
 
         //Emplacement des Panels DVD et Livre
         gbCC.gridy = 7;
         gbCC.gridx = 0;
-        panelContenu.add(panelDVD, gbCC);
-        panelContenu.add(panelLivre, gbCC);
+        panelContenu.add(panelDVD, gbCC);                                       // Ajoute le panelDvd en position x = 0, Y = 7
+        panelContenu.add(panelLivre, gbCC);                                     // Ajoute le panelDvd en position x = 0, Y = 7
 
         //Création des boutons
         gbCC.gridy = 8;
@@ -275,13 +279,13 @@ public class Article {
             //Actions lors des cliques sur le bouton 
             if (dvd.isSelected()) {
                 Dvd leDvd = new Dvd(tfReference.getText(), tfDesignation.getText(), Double.parseDouble(tfPrix.getText()), Double.parseDouble(tfDuree.getText()), tfRealisateur.getText());
-                globalLesArticles.add(leDvd);
+                globalLesArticles.add(leDvd);                                   // Ajout du dvd dans la liste global contenant les dvd
                 Fenetre formMain = new Fenetre("Menu");                         // Instanciation de Fenetre de 1024x768 avec le titre "Menu"
                 fenetre.dispose();
 
             } else if (livre.isSelected()) {
                 Livre leLivre = new Livre(tfReference.getText(), tfDesignation.getText(), Double.parseDouble(tfPrix.getText()), tfISBN.getText(), Integer.parseInt(tfNbPage.getText()), tfAuteur.getText());
-                globalLesArticles.add(leLivre);
+                globalLesArticles.add(leLivre);                                 // Ajout du livre dans la liste global contenant les livres
                 Fenetre formMain = new Fenetre("Menu");                         // Instanciation de Fenetre de 1024x768 avec le titre "Menu"
                 fenetre.dispose();
             }
@@ -307,5 +311,11 @@ public class Article {
         fenetre.add(panel);                                                     // Ajoute le JPanel (panelContenu) au JFrame (fenetre)
         fenetre.pack();                                                         //
         fenetre.setVisible(true);                                               // Rend la fenêtre visible
+    }
+    
+    public void checkRef(){                                                     // Fonction de vérification du champs Référence
+        if(tfReference.getText().length() < 1){                                 // Si le champs référence contient moins de 1 charactère (=> en gros si il est vide)
+            lesErreurs.add("Champ de référence vide.");                         // Ajoute une erreur "champ vide"
+        }
     }
 }
