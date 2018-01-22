@@ -108,40 +108,9 @@ public class Article {
         gbCC.fill = GridBagConstraints.BOTH;                                    // Prend toute la place diponible en hauteur et en largeur
         gbCC.insets = new Insets(5, 5, 5, 5);                                   // insets défini la marge entre les composant new Insets(margeSupérieure, margeGauche, margeInférieur, margeDroite) */
 
-        //Panel Error
-        JPanel PanelError = new JPanel();                                       // Création d'un JPanel
-        PanelError.setLayout(new GridBagLayout());                              // Création d'un Layaout de tipe GridBag
-        GridBagConstraints gbCE = new GridBagConstraints();                     // Le gbC va définir la position et la taille des éléments
-        gbCE.fill = GridBagConstraints.BOTH;                                    // Prend toute la place diponible en hauteur et en largeur
-        gbCE.insets = new Insets(5, 5, 5, 5);                                   // insets défini la marge entre les composant new Insets(margeSupérieure, margeGauche, margeInférieur, margeDroite) */
-
         gbC.gridy = 0;
         panel.add(panelContenu, gbC);                                           // Ajoute un panel "panelContenu" à "panel" en position x = 0, Y = 0
         gbC.gridy = 1;
-        panel.add(PanelError, gbC);                                             // Ajoute un panel "panelError" à "panel" en position x = 0, Y = 1
-
-        // *********************
-        // Panel Contenu Erreurs
-        // *********************
-        gbCE.gridy = 0;
-        JLabel lRefError = new JLabel("X");                                     // Créer un label
-        PanelError.add(lRefError, gbCE);                                        // le label au panelContenu en position x = 0, Y = 0
-
-        gbCE.gridy = 2;
-        JLabel lDesignationError = new JLabel("X");                             // Créer un label
-        PanelError.add(lDesignationError, gbCE);                                // le label au panelContenu en position x = 0, Y = 1
-
-        gbCE.gridy = 4;
-        JLabel lPrixError = new JLabel("X");                                    // Créer un label
-        PanelError.add(lPrixError, gbCE);                                       // le label au panelContenu en position x = 0, Y = 4
-
-        gbCE.gridy = 6;
-        JLabel lObjet1Error = new JLabel("X");                                  // Créer un label
-        PanelError.add(lObjet1Error, gbCE);                                     // le label au panelContenu en position x = 0, Y = 6
-
-        gbCE.gridy = 8;
-        JLabel lObjet2Error = new JLabel("X");                                  // Créer un label
-        PanelError.add(lObjet2Error, gbCE);                                     // le label au panelContenu en position x = 0, Y = 8
 
         // ************************
         // Panel Contenu principal
@@ -319,7 +288,6 @@ public class Article {
         });
 
         // Couleurs pour les Tests
-        PanelError.setBackground(Color.red);
         panelContenu.setBackground(Color.PINK);
         panelLivre.setBackground(Color.CYAN);
         panelDVD.setBackground(Color.GREEN);
