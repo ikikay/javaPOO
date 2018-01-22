@@ -15,6 +15,7 @@ import javax.swing.ButtonGroup;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JRadioButton;
 import static javax.swing.WindowConstants.DISPOSE_ON_CLOSE;
@@ -37,7 +38,7 @@ public class Article {
     TextField tfISBN;
     TextField tfNbPage;
     TextField tfAuteur;
-    
+
     ArrayList<String> lesErreurs;
 
     //Constructeur d'Ajout (Première entré dans la fenêtre)
@@ -50,7 +51,6 @@ public class Article {
     public Article(Object lArticle) {
         creationForm();                                                         // Appelle la fonction de création de la fenêtre
         String laClasseArticle = lArticle.getClass().toString();                // Permet de savoir si c'est un DVD ou un Livre
-        lesErreurs = new ArrayList<>();                                         // Instancie la liste des erreurs
 
         switch (laClasseArticle) {
             case "Dvd":                                                         // Si l'objet est un DVD
@@ -88,6 +88,8 @@ public class Article {
     }
 
     public void creationForm() {
+        lesErreurs = new ArrayList<>();                                         // Instancie la liste des erreurs
+
         JFrame fenetre = new JFrame();                                          // Création d'un JFrame
         fenetre.setTitle("Ajouter un Article");                                 // Applique le titre à la fenêtre
         fenetre.setBounds(25, 25, 100, 500);                                    // Fait une fenêtre de largeur x hauteur avec 25 de marge
@@ -277,17 +279,32 @@ public class Article {
         panelContenu.add(bAddArticle, gbCC);                                    // ajoute ce bouton, au panelContenu
         bAddArticle.addActionListener((event) -> {                              // Créer une " "micro fonction" " lorsque quelque chose se passe sur le bouton
             //Actions lors des cliques sur le bouton 
+            checkRef();                                                         // Vérifis les erreurs sur le champs Référence
+            checkDesignation();                                                 // Vérifis les erreurs sur le champ Désignation
+            checkPrix();                                                        // Vérifis les erreurs sur le champ Prix
             if (dvd.isSelected()) {
-                Dvd leDvd = new Dvd(tfReference.getText(), tfDesignation.getText(), Double.parseDouble(tfPrix.getText()), Double.parseDouble(tfDuree.getText()), tfRealisateur.getText());
-                globalLesArticles.add(leDvd);                                   // Ajout du dvd dans la liste global contenant les dvd
-                Fenetre formMain = new Fenetre("Menu");                         // Instanciation de Fenetre de 1024x768 avec le titre "Menu"
-                fenetre.dispose();
+                checkDuree();                                                   // Vérifis les erreurs sur le champ Durée
+                checkRealisateur();                                             // Vérifis les erreurs sur le champ Réalisateur
+                showErrors();                                                   // Affiche et vide les erreurs
+                if (lesErreurs.isEmpty()) {                                     // Si il n'y à pas d'erreurs
+                    Dvd leDvd = new Dvd(tfReference.getText(), tfDesignation.getText(), Double.parseDouble(tfPrix.getText()), Double.parseDouble(tfDuree.getText()), tfRealisateur.getText());
+                    globalLesArticles.add(leDvd);                               // Ajout du dvd dans la liste global contenant les dvd
+                    Fenetre formMain = new Fenetre("Menu");                     // Instanciation de Fenetre de 1024x768 avec le titre "Menu"
+                    fenetre.dispose();
+                }
 
             } else if (livre.isSelected()) {
-                Livre leLivre = new Livre(tfReference.getText(), tfDesignation.getText(), Double.parseDouble(tfPrix.getText()), tfISBN.getText(), Integer.parseInt(tfNbPage.getText()), tfAuteur.getText());
-                globalLesArticles.add(leLivre);                                 // Ajout du livre dans la liste global contenant les livres
-                Fenetre formMain = new Fenetre("Menu");                         // Instanciation de Fenetre de 1024x768 avec le titre "Menu"
-                fenetre.dispose();
+                checkISBN();                                                    // Vérifis les erreurs sur le champ ISBN
+                checkNBPages();                                                 // Vérifis les erreurs sur le champ nombres de pages
+                checkAuteur();                                                  // Vérifis les erreurs sur le champ Auteur
+                showErrors();                                                   // Affiche et vide les erreurs
+
+                if (lesErreurs.isEmpty()) {                                     // Si il n'y à pas d'erreurs
+                    Livre leLivre = new Livre(tfReference.getText(), tfDesignation.getText(), Double.parseDouble(tfPrix.getText()), tfISBN.getText(), Integer.parseInt(tfNbPage.getText()), tfAuteur.getText());
+                    globalLesArticles.add(leLivre);                             // Ajout du livre dans la liste global contenant les livres
+                    Fenetre formMain = new Fenetre("Menu");                     // Instanciation de Fenetre de 1024x768 avec le titre "Menu"
+                    fenetre.dispose();
+                }
             }
         });
 
@@ -312,10 +329,65 @@ public class Article {
         fenetre.pack();                                                         //
         fenetre.setVisible(true);                                               // Rend la fenêtre visible
     }
-    
-    public void checkRef(){                                                     // Fonction de vérification du champs Référence
-        if(tfReference.getText().length() < 1){                                 // Si le champs référence contient moins de 1 charactère (=> en gros si il est vide)
+
+    // *************************************
+    // Les fonctions de véfification d'erreurs
+    // *************************************
+    public void showErrors() {
+        String errorsString = "";
+        for (String erreur : lesErreurs) {
+            errorsString = errorsString + erreur + "\n";
+        }
+        JOptionPane.showMessageDialog(null, errorsString, "Erreurs", JOptionPane.OK_OPTION);// Affiche les erreurs
+        lesErreurs.removeAll(lesErreurs);                                       // Vide la liste des erreurs
+
+    }
+
+    public void checkRef() {                                                    // Fonction de vérification du champs Référence
+        if (tfReference.getText().length() < 1) {                               // Si le champs référence contient moins de 1 charactère (=> en gros si il est vide)
             lesErreurs.add("Champ de référence vide.");                         // Ajoute une erreur "champ vide"
+        }
+    }
+
+    public void checkDesignation() {                                            // Fonction de vérification du champs Désignation
+        if (tfReference.getText().length() < 1) {                               // Si le champs Désignation contient moins de 1 charactère (=> en gros si il est vide)
+            lesErreurs.add("Champ de désignation vide.");                       // Ajoute une erreur "champ vide"
+        }
+    }
+
+    public void checkPrix() {                                                   // Fonction de vérification du champs Prix
+        if (tfReference.getText().length() < 1) {                               // Si le champs Prix contient moins de 1 charactère (=> en gros si il est vide)
+            lesErreurs.add("Champ du prix vide.");                              // Ajoute une erreur "champ vide"
+        }
+    }
+
+    public void checkDuree() {                                                  // Fonction de vérification du champs Duree
+        if (tfReference.getText().length() < 1) {                               // Si le champs Duree contient moins de 1 charactère (=> en gros si il est vide)
+            lesErreurs.add("Champ de la durée vide.");                          // Ajoute une erreur "champ vide"
+        }
+    }
+
+    public void checkRealisateur() {                                            // Fonction de vérification du champs Réalisateur
+        if (tfReference.getText().length() < 1) {                               // Si le champs Réalisateur contient moins de 1 charactère (=> en gros si il est vide)
+            lesErreurs.add("Champ du réalisateur vide.");                       // Ajoute une erreur "champ vide"
+        }
+    }
+
+    public void checkISBN() {                                                   // Fonction de vérification du champs ISBN
+        if (tfReference.getText().length() < 1) {                               // Si le champs ISBN contient moins de 1 charactère (=> en gros si il est vide)
+            lesErreurs.add("Champ du ISBN vide.");                              // Ajoute une erreur "champ vide"
+        }
+    }
+
+    public void checkNBPages() {                                                // Fonction de vérification du champs NBPages
+        if (tfReference.getText().length() < 1) {                               // Si le champs NBPages contient moins de 1 charactère (=> en gros si il est vide)
+            lesErreurs.add("Champ du nombre de pages vide.");                   // Ajoute une erreur "champ vide"
+        }
+    }
+
+    public void checkAuteur() {                                                 // Fonction de vérification du champs Auteur
+        if (tfReference.getText().length() < 1) {                               // Si le champs Auteur contient moins de 1 charactère (=> en gros si il est vide)
+            lesErreurs.add("Champ de l'auteur vide.");                          // Ajoute une erreur "champ vide"
         }
     }
 }
