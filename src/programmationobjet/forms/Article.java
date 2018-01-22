@@ -259,7 +259,7 @@ public class Article {
                 if (lesErreurs.isEmpty()) {                                     // Si il n'y à pas d'erreurs
                     Dvd leDvd = new Dvd(tfReference.getText(), tfDesignation.getText(), Double.parseDouble(tfPrix.getText()), Double.parseDouble(tfDuree.getText()), tfRealisateur.getText());
                     globalLesArticles.add(leDvd);                               // Ajout du dvd dans la liste global contenant les dvd
-                    Fenetre formMain = new Fenetre("Menu");                     // Instanciation de Fenetre de 1024x768 avec le titre "Menu"
+                    Fenetre formMain = new Fenetre();                           // Instanciation de Fenetre de 1024x768 avec le titre "Menu"
                     fenetre.dispose();
                 }
                 showErrors();                                                   // Affiche et vide les erreurs
@@ -272,7 +272,7 @@ public class Article {
                 if (lesErreurs.isEmpty()) {                                     // Si il n'y à pas d'erreurs
                     Livre leLivre = new Livre(tfReference.getText(), tfDesignation.getText(), Double.parseDouble(tfPrix.getText()), tfISBN.getText(), Integer.parseInt(tfNbPage.getText()), tfAuteur.getText());
                     globalLesArticles.add(leLivre);                             // Ajout du livre dans la liste global contenant les livres
-                    Fenetre formMain = new Fenetre("Menu");                     // Instanciation de Fenetre de 1024x768 avec le titre "Menu"
+                    Fenetre formMain = new Fenetre();                           // Instanciation de Fenetre de 1024x768 avec le titre "Menu"
                     fenetre.dispose();
                 }
                 showErrors();                                                   // Affiche et vide les erreurs
@@ -281,11 +281,11 @@ public class Article {
 
         gbCC.gridy = 9;
         JButton bRetour = new JButton("Retour");                                // Créer un bouton "Retour"
-        bAddArticle.setSize(100, 50);                                           // de taille 100x50
+        bRetour.setSize(100, 50);                                               // de taille 100x50
         panelContenu.add(bRetour, gbCC);                                        // ajoute ce bouton, au panelContenu
         bRetour.addActionListener((event) -> {                                  // Créer une " "micro fonction" " lorsque quelque chose se passe sur le bouton
             //Actions lors des cliques sur le bouton 
-            Fenetre formMain = new Fenetre("Menu");                             // Instanciation de Fenetre avec le titre "Menu"
+            Fenetre formMain = new Fenetre();                                   // Instanciation de Fenetre avec le titre "Menu"
             fenetre.dispose();                                                  // Ferme la fenetre
         });
 
@@ -304,9 +304,9 @@ public class Article {
     // Les fonctions de véfification d'erreurs
     // *************************************
     public void showErrors() {
-        String errorsString = "";
-        for (String erreur : lesErreurs) {
-            errorsString = errorsString + erreur + "\n";
+        String errorsString = "";                                               // Avoir toutes les erreurs en une seul variable
+        for (String erreur : lesErreurs) {                                      // Fusionne toutes les erreurs
+            errorsString = errorsString + erreur + "\n";                        // en une seul variable
         }
         JOptionPane.showMessageDialog(null, errorsString, "Erreurs", JOptionPane.OK_OPTION);// Affiche les erreurs
         lesErreurs.removeAll(lesErreurs);                                       // Vide la liste des erreurs
@@ -326,37 +326,37 @@ public class Article {
     }
 
     public void checkPrix() {                                                   // Fonction de vérification du champs Prix
-        if (tfPrix.getText().length() < 1) {                               // Si le champs Prix contient moins de 1 charactère (=> en gros si il est vide)
+        if (tfPrix.getText().length() < 1) {                                    // Si le champs Prix contient moins de 1 charactère (=> en gros si il est vide)
             lesErreurs.add("Champ du prix vide.");                              // Ajoute une erreur "champ vide"
         }
     }
 
     public void checkDuree() {                                                  // Fonction de vérification du champs Duree
-        if (tfDuree.getText().length() < 1) {                               // Si le champs Duree contient moins de 1 charactère (=> en gros si il est vide)
+        if (tfDuree.getText().length() < 1) {                                   // Si le champs Duree contient moins de 1 charactère (=> en gros si il est vide)
             lesErreurs.add("Champ de la durée vide.");                          // Ajoute une erreur "champ vide"
         }
     }
 
     public void checkRealisateur() {                                            // Fonction de vérification du champs Réalisateur
-        if (tfRealisateur.getText().length() < 1) {                               // Si le champs Réalisateur contient moins de 1 charactère (=> en gros si il est vide)
+        if (tfRealisateur.getText().length() < 1) {                             // Si le champs Réalisateur contient moins de 1 charactère (=> en gros si il est vide)
             lesErreurs.add("Champ du réalisateur vide.");                       // Ajoute une erreur "champ vide"
         }
     }
 
     public void checkISBN() {                                                   // Fonction de vérification du champs ISBN
-        if (tfISBN.getText().length() < 1) {                               // Si le champs ISBN contient moins de 1 charactère (=> en gros si il est vide)
+        if (tfISBN.getText().length() < 1) {                                    // Si le champs ISBN contient moins de 1 charactère (=> en gros si il est vide)
             lesErreurs.add("Champ du ISBN vide.");                              // Ajoute une erreur "champ vide"
         }
     }
 
     public void checkNBPages() {                                                // Fonction de vérification du champs NBPages
-        if (tfNbPage.getText().length() < 1) {                               // Si le champs NBPages contient moins de 1 charactère (=> en gros si il est vide)
+        if (tfNbPage.getText().length() < 1) {                                  // Si le champs NBPages contient moins de 1 charactère (=> en gros si il est vide)
             lesErreurs.add("Champ du nombre de pages vide.");                   // Ajoute une erreur "champ vide"
         }
     }
 
     public void checkAuteur() {                                                 // Fonction de vérification du champs Auteur
-        if (tfAuteur.getText().length() < 1) {                               // Si le champs Auteur contient moins de 1 charactère (=> en gros si il est vide)
+        if (tfAuteur.getText().length() < 1) {                                  // Si le champs Auteur contient moins de 1 charactère (=> en gros si il est vide)
             lesErreurs.add("Champ de l'auteur vide.");                          // Ajoute une erreur "champ vide"
         }
     }

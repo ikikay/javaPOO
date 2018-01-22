@@ -7,17 +7,8 @@ package programmationobjet.main;
 
 import programmationobjet.classes.*;
 
-import java.awt.Color;
-import java.awt.Dimension;
 import java.time.LocalDate;
 import java.util.ArrayList;
-import javax.swing.JFrame;
-import javax.swing.JPanel;
-import javax.swing.JList;
-import javax.swing.DefaultListModel;
-import javax.swing.ListSelectionModel;
-import javax.swing.JScrollPane;
-import javax.swing.JButton;
 import programmationobjet.forms.Fenetre;
 
 /**
@@ -51,7 +42,7 @@ public class ProgrammationObjet {
         globalLesPersonnes.add(rea);
         globalLesPersonnes.add(aut);
         
-        Fenetre formMain = new Fenetre("Menu");                     // Instanciation de Fenetre avec le titre "Menu"
+        Fenetre formMain = new Fenetre();                           // Instanciation de Fenetre avec le titre "Menu"
         
         /* Premier exercice, commenté car devenu inutile
         JFrame formMain = new JFrame();                             // Création d'un JFrame nommé formMain

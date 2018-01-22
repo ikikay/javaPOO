@@ -22,9 +22,9 @@ import static javax.swing.WindowConstants.DISPOSE_ON_CLOSE;
  */
 public class Fenetre {
 
-    public Fenetre(String titre) {
+    public Fenetre() {
         JFrame fenetre = new JFrame();                                          // Création d'un JFrame
-        fenetre.setTitle(titre);                                                // Applique le titre à la fenêtre
+        fenetre.setTitle("Menu");                                               // Applique le titre à la fenêtre
         fenetre.setBounds(25, 25, 100, 100);                                    // Fait une fenêtre de largeur x hauteur avec 25 de marge
         fenetre.setDefaultCloseOperation(DISPOSE_ON_CLOSE);                     // Ferme l'application si il n'y à plus de fenêtre
         fenetre.setLocationRelativeTo(null);                                    // Centre la fenêtre
