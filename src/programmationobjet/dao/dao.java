@@ -319,7 +319,7 @@ public class dao {
                 Livre l = new Livre();
                 l.setId_Livre(res.getInt("ID_Livre"));
                 l.setIsbn(res.getString("Isbn"));
-                l.setNbrPages(res.getInt("ID_Livre"));
+                l.setNbrPages(res.getInt("NbrPages"));
                 l.setId_Article(res.getInt("ID_Article"));
                 l.setReference(res.getString("Reference"));
                 l.setDesignation(res.getString("Designation"));
@@ -335,5 +335,183 @@ public class dao {
         }
 
         return lesLivre;
+    }
+
+    public static void updateAuteur(Auteur lAuteur) {
+        try {
+            stat = cnxDirect.createStatement();
+            System.out.println("Objet Statement créé avec succès");
+        } catch (SQLException e) {
+            System.out.println("Erreur pendant la création de l'objet Statement : " + e);
+        }
+        try {
+            Date DateNaissance = Date.valueOf(lAuteur.getDteNaissance());
+            stat.execute("UPDATE personne SET "
+                    + "Nom = '" + lAuteur.getNom() + "',"
+                    + "Prenom = '" + lAuteur.getPrenom() + "',"
+                    + "DteNaissance = '" + DateNaissance + "' "
+                    + "WHERE ID_Personne = '" + lAuteur.getId_Personne() + "'");
+
+            System.out.println("Exécution de la requête de modification d'Auteur avec succès");
+        } catch (SQLException e) {
+            System.out.println("Erreur pendant l'éxecution de la requête de modification d'Auteur : " + e);
+        }
+    }
+
+    public static void updateRealisateur(Realisateur leRealisateur) {
+        try {
+            stat = cnxDirect.createStatement();
+            System.out.println("Objet Statement créé avec succès");
+        } catch (SQLException e) {
+            System.out.println("Erreur pendant la création de l'objet Statement : " + e);
+        }
+        try {
+            Date DateNaissance = Date.valueOf(leRealisateur.getDteNaissance());
+            stat.execute("UPDATE personne SET "
+                    + "Nom = '" + leRealisateur.getNom() + "',"
+                    + "Prenom = '" + leRealisateur.getPrenom() + "',"
+                    + "DteNaissance = '" + DateNaissance + "' "
+                    + "WHERE ID_Personne = '" + leRealisateur.getId_Personne() + "'");
+
+            System.out.println("Exécution de la requête de modification de Realisateur avec succès");
+        } catch (SQLException e) {
+            System.out.println("Erreur pendant l'éxecution de la requête de modification de Realisateur : " + e);
+        }
+    }
+
+    public static void updateDvd(Dvd leDvd) {
+        try {
+            stat = cnxDirect.createStatement();
+            System.out.println("Objet Statement créé avec succès");
+        } catch (SQLException e) {
+            System.out.println("Erreur pendant la création de l'objet Statement : " + e);
+        }
+        try {
+            stat.execute("UPDATE article SET "
+                    + "Reference = '" + leDvd.getReference() + "', "
+                    + "Designation = '" + leDvd.getDesignation() + "', "
+                    + "Prix = '" + leDvd.getPrix() + "'"
+                    + "WHERE ID_Article = '" + leDvd.getId_Article() + "'");
+            stat.execute("UPDATE dvd SET "
+                    + "Duree = '" + leDvd.getId_Article() + "'"
+                    + "WHERE ID_Dvd = '" + leDvd.getId_Dvd() + "'");
+
+            System.out.println("Exécution de la requête de modification de Dvd avec succès");
+        } catch (SQLException e) {
+            System.out.println("Erreur pendant l'éxecution de la requête de modification de Dvd : " + e);
+        }
+    }
+
+    public static void updateLivre(Livre leLivre) {
+        try {
+            stat = cnxDirect.createStatement();
+            System.out.println("Objet Statement créé avec succès");
+        } catch (SQLException e) {
+            System.out.println("Erreur pendant la création de l'objet Statement : " + e);
+        }
+        try {
+            stat.execute("UPDATE article SET "
+                    + "Reference = '" + leLivre.getReference() + "', "
+                    + "Designation = '" + leLivre.getDesignation() + "', "
+                    + "Prix = '" + leLivre.getPrix() + "' "
+                    + "WHERE ID_Article = '" + leLivre.getId_Article() + "'");
+            stat.execute("UPDATE dvd SET "
+                    + "Isbn = '" + leLivre.getIsbn() + "',"
+                    + "NbrPages = '" + leLivre.getNbrPages() + "' "
+                    + "WHERE ID_Livre = '" + leLivre.getId_Livre() + "'");
+
+            System.out.println("Exécution de la requête de modification de Livre avec succès");
+        } catch (SQLException e) {
+            System.out.println("Erreur pendant l'éxecution de la requête de modification de Livre : " + e);
+        }
+    }
+
+    public static void deletePersonne(Object laPersonne) {
+        try {
+            stat = cnxDirect.createStatement();
+            System.out.println("Objet Statement créé avec succès");
+        } catch (SQLException e) {
+            System.out.println("Erreur pendant la création de l'objet Statement : " + e);
+        }
+        try {
+            String laClassePersonne = laPersonne.getClass().toString();                // Permet de savoir si c'est un DVD ou un Livre
+            laClassePersonne = laClassePersonne.split("\\.")[laClassePersonne.split("\\.").length - 1];
+            switch (laClassePersonne) {
+                case "Auteur":                                                  // Si l'objet est un Auteur
+                    laPersonne = (Auteur) laPersonne;                              // Modifie le type de la variable en Auteur
+                    Auteur lAuteur = new Auteur();                              // Créer une variable de type Auteur (pour travailler dessus plutôt que sur laPersonne qui n'est pas parlant)
+                    lAuteur = (Auteur) laPersonne;                              // Met laPersonne (qui est un Auteur) dans la variable lAuteur
+
+                    stat.execute("DELETE FROM auteur "
+                            + "WHERE ID_Auteur = '" + lAuteur.getId_Auteur()+ "'");
+                    stat.execute("DELETE FROM personne "
+                            + "WHERE ID_Personne = '" + lAuteur.getId_Personne() + "'");
+                    break;
+
+                case "Realisateur":                                             // Si l'objet est un Realisateur
+                    laPersonne = (Realisateur) laPersonne;                      // Modifie le type de la variable en Realisateur
+                    Realisateur leRealisateur = new Realisateur();              // Créer une variable de type Realisateur (pour travailler dessus plutôt que sur laPersonne qui n'est pas parlant)
+                    leRealisateur = (Realisateur) laPersonne;                   // Met leRealisateur (qui est un Realisateur) dans la variable leRealisateur
+
+                    stat.execute("DELETE FROM realisateur "
+                            + "WHERE ID_Realisateur = '" + leRealisateur.getId_Realisateur()+ "'");
+                    stat.execute("DELETE FROM personne "
+                            + "WHERE ID_Personne = '" + leRealisateur.getId_Personne() + "'");
+                    break;
+
+                default:
+                    System.out.println("Erreur dans le préremplissage des champs, aucune case pour : '" + laClassePersonne + "'");
+                    break;
+            }
+
+            System.out.println("Exécution de la requête de suppression de Realisateur avec succès");
+        } catch (SQLException e) {
+            System.out.println("Erreur pendant l'éxecution de la requête de suppression de Realisateur : " + e);
+        }
+    }
+
+    public static void deleteArticle(Object lArticle) {
+        try {
+            stat = cnxDirect.createStatement();
+            System.out.println("Objet Statement créé avec succès");
+        } catch (SQLException e) {
+            System.out.println("Erreur pendant la création de l'objet Statement : " + e);
+        }
+        try {
+            String laClasseArticle = lArticle.getClass().toString();                // Permet de savoir si c'est un DVD ou un Livre
+            laClasseArticle = laClasseArticle.split("\\.")[laClasseArticle.split("\\.").length - 1];
+            switch (laClasseArticle) {
+                case "Dvd":                                                     // Si l'objet est un DVD
+                    lArticle = (Dvd) lArticle;                                  // Modifie le type de la variable en DVD
+                    Dvd leDvd = new Dvd();                                      // Créer une variable de type Dvd (pour travailler dessus plutôt que sur lArticle qui n'est pas parlant)
+                    leDvd = (Dvd) lArticle;                                     // Met lArticle (qui est un Dvd) dans la variable leDvd
+
+                    stat.execute("DELETE FROM dvd "
+                            + "WHERE ID_Dvd = '" + leDvd.getId_Dvd() + "'");
+                    stat.execute("DELETE FROM article "
+                            + "WHERE ID_Article = '" + leDvd.getId_Article() + "'");
+                    break;
+
+                case "Livre":                                                   // Si l'objet est un livre
+                    lArticle = (Livre) lArticle;                                // Modifie le type de la variable en Livre
+                    Livre leLivre = new Livre();                                // Créer une variable de type Livre (pour travailler dessus plutôt que sur lArticle qui n'est pas parlant)
+                    leLivre = (Livre) lArticle;                                 // Met lArticle (qui est un Livre) dans la variable leLivre
+
+                    stat.execute("DELETE FROM livre "
+                            + "WHERE ID_Livre = " + leLivre.getId_Livre());
+                    stat.execute("DELETE FROM article" + laClasseArticle + " "
+                            + "WHERE ID_Article = " + leLivre.getId_Article());
+
+                    break;
+
+                default:
+                    System.out.println("Erreur dans le préremplissage des champs, aucune case pour : '" + laClasseArticle + "'");
+                    break;
+            }
+
+            System.out.println("Exécution de la requête de suppression de l'article avec succès");
+        } catch (SQLException e) {
+            System.out.println("Erreur pendant l'éxecution de la requête de suppression de l'article : " + e);
+        }
     }
 }

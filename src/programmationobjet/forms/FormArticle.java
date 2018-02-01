@@ -36,6 +36,8 @@ import static programmationobjet.main.ProgrammationObjet.globalLesArticles;
 public class FormArticle {
 
     //Mes futurs TextField
+    TextField tfIdMere;
+    TextField tfIdFille;
     TextField tfReference;
     TextField tfDesignation;
     TextField tfPrix;
@@ -44,6 +46,8 @@ public class FormArticle {
     TextField tfISBN;
     TextField tfNbPage;
     JComboBox cbAuteur;
+
+    boolean toUpdate;
 
     ArrayList<String> lesErreurs;
 
@@ -57,19 +61,23 @@ public class FormArticle {
     public FormArticle(Object lArticle) {
         creationForm();                                                         // Appelle la fonction de création de la fenêtre
         String laClasseArticle = lArticle.getClass().toString();                // Permet de savoir si c'est un DVD ou un Livre
-
+        laClasseArticle = laClasseArticle.split("\\.")[laClasseArticle.split("\\.").length - 1];
         switch (laClasseArticle) {
             case "Dvd":                                                         // Si l'objet est un DVD
                 lArticle = (Dvd) lArticle;                                      // Modifie le type de la variable FormArticle (que l'ont modifie) en DVD
                 Dvd leDvd = new Dvd();                                          // Créer une variable de type DVD (pour travailler dessus plutôt que sur lArticle qui n'est pas parlant)
                 leDvd = (Dvd) lArticle;                                         // Met lArticle (qui est un DVD) dans la variable leDVD
 
+                tfIdMere.setText(String.valueOf(leDvd.getId_Article()));
+                tfIdFille.setText(String.valueOf(leDvd.getId_Dvd()));
                 tfReference.setText(leDvd.getReference());                      // Prérempli les champs avec l'objets actuel
-                tfDesignation.setText(leDvd.getReference());                    // Prérempli les champs avec l'objets actuel
+                tfDesignation.setText(leDvd.getDesignation());                  // Prérempli les champs avec l'objets actuel
                 tfPrix.setText(String.valueOf(leDvd.getPrix()));                // Prérempli les champs avec l'objets actuel
 
                 tfDuree.setText(String.valueOf(leDvd.getDuree()));              // Prérempli les champs avec l'objets actuel
-                //cbRealisateur // Prérempli les champs avec l'objets actuel // TODO
+                cbRealisateur.setSelectedItem(leDvd.getRealisateur());          // Prérempli les champs avec l'objets actuel // TODO
+
+                toUpdate = true;
                 break;
 
             case "Livre":                                                       // Si l'objet est un livre
@@ -77,17 +85,21 @@ public class FormArticle {
                 Livre leLivre = new Livre();                                    // Créer une variable de type Livre (pour travailler dessus plutôt que sur lArticle qui n'est pas parlant)
                 leLivre = (Livre) lArticle;                                     // Met lArticle (qui est un Livre) dans la variable leLivre
 
+                tfIdMere.setText(String.valueOf(leLivre.getId_Article()));
+                tfIdFille.setText(String.valueOf(leLivre.getId_Livre()));
                 tfReference.setText(leLivre.getReference());                    // Prérempli les champs avec l'objets actuel
-                tfDesignation.setText(leLivre.getReference());                  // Prérempli les champs avec l'objets actuel
+                tfDesignation.setText(leLivre.getDesignation());                  // Prérempli les champs avec l'objets actuel
                 tfPrix.setText(String.valueOf(leLivre.getPrix()));              // Prérempli les champs avec l'objets actuel
 
                 tfISBN.setText(leLivre.getIsbn());                              // Prérempli les champs avec l'objets actuel
                 tfNbPage.setText(String.valueOf(leLivre.getNbrPages()));        // Prérempli les champs avec l'objets actuel
-                //cbAuteur // Prérempli les champs avec l'objets actuel // TODO
+                cbAuteur.setSelectedItem(leLivre.getAuteur());                  // Prérempli les champs avec l'objets actuel // TODO
+
+                toUpdate = true;
                 break;
 
             default:                                                            // Si l'objet n'est ni un DVD ni un Livre
-                System.out.println(laClasseArticle);
+                System.out.println("Erreur dans le préremplissage des champs, aucune case pour : '" + laClasseArticle + "'");
                 break;
         }
         //Dao .update();
@@ -121,6 +133,22 @@ public class FormArticle {
         // ************************
         // Panel Contenu principal
         // ************************
+        //Création d'un TextField idMere
+        gbCC.gridy = 0;
+        gbCC.gridx = 1;
+        tfIdMere = new TextField("", 50);                                    // Créer un Text Field
+        panelContenu.add(tfIdMere, gbCC);
+        tfIdMere.setVisible(false);
+        gbCC.gridx = 0;
+
+        //Création d'un TextField idFille
+        gbCC.gridy = 1;
+        gbCC.gridx = 1;
+        tfIdFille = new TextField("", 50);                                    // Créer un Text Field
+        panelContenu.add(tfIdFille, gbCC);
+        tfIdFille.setVisible(false);
+        gbCC.gridx = 0;
+
         //Création d'un Label demande de reference
         gbCC.gridy = 0;
         JLabel lRef = new JLabel("Entrez la référence de l'article");           // Créer un label
@@ -261,10 +289,14 @@ public class FormArticle {
             if (dvd.isSelected()) {
                 checkDuree();                                                   // Vérifis les erreurs sur le champ Réalisateur
 
-                if (lesErreurs.isEmpty()) {                                     // Si il n'y à pas d'erreurs
-                    Realisateur leRealisateurSelectionne = (Realisateur) cbRealisateur.getSelectedItem();
-                    Dvd leDvd = new Dvd(Double.parseDouble(tfDuree.getText()), leRealisateurSelectionne, tfReference.getText(), tfDesignation.getText(), Double.parseDouble(tfPrix.getText()));
-                    dao.createDvd(leDvd);                                       // Ajout du dvd dans la base de donnée
+                if (lesErreurs.isEmpty()) {                 
+                    if (toUpdate) {
+                        Dvd leDvd = new Dvd(Integer.parseInt(tfIdFille.getText()), Double.parseDouble(tfDuree.getText()), (Realisateur) cbRealisateur.getSelectedItem(), Integer.parseInt(tfIdMere.getText()), tfReference.getText(), tfDesignation.getText(), Double.parseDouble(tfPrix.getText()));                  
+                        dao.updateDvd(leDvd);                                   // Modifie le Dvd
+                    } else {
+                        Dvd leDvd = new Dvd(Double.parseDouble(tfDuree.getText()), (Realisateur) cbRealisateur.getSelectedItem(), tfReference.getText(), tfDesignation.getText(), Double.parseDouble(tfPrix.getText()));
+                        dao.createDvd(leDvd);                                   // Ajout du Dvd
+                    }
                     FormFenetre formMain = new FormFenetre();                   // Instanciation de FormFenetre de 1024x768 avec le titre "Menu"
                     fenetre.dispose();
                 }
@@ -275,8 +307,13 @@ public class FormArticle {
                 checkNBPages();                                                 // Vérifis les erreurs sur le champ Auteur
 
                 if (lesErreurs.isEmpty()) {                                     // Si il n'y à pas d'erreurs
-                    Livre leLivre = new Livre(tfISBN.getText(), Integer.parseInt(tfNbPage.getText()), (Auteur) cbAuteur.getSelectedItem(), tfReference.getText(), tfDesignation.getText(), Double.parseDouble(tfPrix.getText()));
-                    dao.createLivre(leLivre);                                   // Ajout du livre dans la base de donnée
+                    if (toUpdate) {
+                        Livre leLivre = new Livre(Integer.parseInt(tfIdFille.getText()), tfISBN.getText(), Integer.parseInt(tfNbPage.getText()), (Auteur) cbAuteur.getSelectedItem(), Integer.parseInt(tfIdMere.getText()), tfReference.getText(), tfDesignation.getText(), Double.parseDouble(tfPrix.getText()));         
+                        dao.updateLivre(leLivre);                               // Modifie le Livre
+                    } else {
+                        Livre leLivre = new Livre(tfISBN.getText(), Integer.parseInt(tfNbPage.getText()), (Auteur) cbAuteur.getSelectedItem(), tfReference.getText(), tfDesignation.getText(), Double.parseDouble(tfPrix.getText()));
+                        dao.createLivre(leLivre);                               // Ajout du Livre
+                    }
                     FormFenetre formMain = new FormFenetre();                   // Instanciation de FormFenetre de 1024x768 avec le titre "Menu"
                     fenetre.dispose();
                 }
@@ -290,7 +327,7 @@ public class FormArticle {
         panelContenu.add(bRetour, gbCC);                                        // ajoute ce bouton, au panelContenu
         bRetour.addActionListener((event) -> {                                  // Créer une " "micro fonction" " lorsque quelque chose se passe sur le bouton
             //Actions lors des cliques sur le bouton 
-            FormFenetre formMain = new FormFenetre();                                   // Instanciation de FormFenetre avec le titre "Menu"
+            FormFenetre formMain = new FormFenetre();                           // Instanciation de FormFenetre avec le titre "Menu"
             fenetre.dispose();                                                  // Ferme la fenetre
         });
 

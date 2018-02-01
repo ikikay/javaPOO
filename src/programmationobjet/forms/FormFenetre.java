@@ -55,29 +55,91 @@ public class FormFenetre {
         lesPersonnes.addAll(dao.getAllRealisateur());
         JList listPersonnes = new JList(lesPersonnes.toArray());                // Création d'une JList avec les personnes
         panel.add(new JScrollPane(listPersonnes), gbC);                         // Ajoute un scrollbar + la liste des personnes au panel
-        
-        //Création des boutons
+
+        //Panel Boutons Articles
+        JPanel panelBarticle = new JPanel();                                    // Création d'un JPanel
+        panelBarticle.setLayout(new GridBagLayout());                           // Création d'un Layaout de tipe GridBag
+        GridBagConstraints gbCA = new GridBagConstraints();                     // Le gbC va définir la position et la taille des éléments
+        gbCA.fill = GridBagConstraints.BOTH;                                    // Prend toute la place diponible en hauteur et en largeur
+        gbCA.insets = new Insets(5, 5, 5, 5);
+
         gbC.gridx = 1;
         gbC.gridy = 0;
+        panel.add(panelBarticle, gbC);                                           // Ajoute un panel "panelBarticle" à "panel" en position x = 1, Y = 0
+
+        //Création des boutons
+        gbCA.gridy = 0;
         JButton bAddArticle = new JButton("Ajouter");                           // Créer un bouton "Ajouter"
         bAddArticle.setSize(100, 50);                                           // de taille 100x50
-        panel.add(bAddArticle, gbC);                                            // ajoute ce bouton, au panel
+        panelBarticle.add(bAddArticle, gbCA);                                   // ajoute ce bouton, au panel
         //Action Boutons
-        bAddArticle.addActionListener((event) -> {                              // Créer une " "micro fonction" " lorsque quelque chose se passe sur le bouton
+        bAddArticle.addActionListener((event) -> {                              // Créer une "micro fonction" " lorsque quelque chose se passe sur le bouton
             //Actions lors des cliques sur le bouton 
-            FormArticle formAddArticle = new FormArticle();                             // Ouvre une fenetre AddArticle
+            FormArticle formAddArticle = new FormArticle();                     // Ouvre une fenetre AddArticle
+            fenetre.dispose();                                                  // Ferme la fenetre
+        });
+        gbCA.gridy = 1;
+        JButton bUpdateArticle = new JButton("Modifier");                       // Créer un bouton "Modifier"
+        bUpdateArticle.setSize(100, 50);                                        // de taille 100x50
+        panelBarticle.add(bUpdateArticle, gbCA);                                // ajoute ce bouton, au panel
+        //Action Boutons
+        bUpdateArticle.addActionListener((event) -> {                           // Créer une "micro fonction" " lorsque quelque chose se passe sur le bouton
+            //Actions lors des cliques sur le bouton 
+            FormArticle formAddArticle = new FormArticle(listArticles.getSelectedValue());// Ouvre une fenetre AddArticle
+            fenetre.dispose();                                                  // Ferme la fenetre
+        });
+        gbCA.gridy = 2;
+        JButton bDeleteArticle = new JButton("Supprimer");                      // Créer un bouton "Supprimer"
+        bDeleteArticle.setSize(100, 50);                                        // de taille 100x50
+        panelBarticle.add(bDeleteArticle, gbCA);                                // ajoute ce bouton, au panel
+        //Action Boutons
+        bDeleteArticle.addActionListener((event) -> {                           // Créer une "micro fonction" " lorsque quelque chose se passe sur le bouton
+            //Actions lors des cliques sur le bouton 
+            dao.deleteArticle(listArticles.getSelectedValue());
+            FormFenetre formMain = new FormFenetre();
             fenetre.dispose();                                                  // Ferme la fenetre
         });
 
-        //Création des boutons        
+        //Panel Boutons Personnes
+        JPanel panelBpersonne = new JPanel();                                   // Création d'un JPanel
+        panelBpersonne.setLayout(new GridBagLayout());                          // Création d'un Layaout de tipe GridBag
+        GridBagConstraints gbCP = new GridBagConstraints();                     // Le gbC va définir la position et la taille des éléments
+        gbCP.fill = GridBagConstraints.BOTH;                                    // Prend toute la place diponible en hauteur et en largeur
+        gbCP.insets = new Insets(5, 5, 5, 5);
+
         gbC.gridx = 1;
         gbC.gridy = 1;
+        panel.add(panelBpersonne, gbC);                                         // Ajoute un panel "panelBpersonne" à "panel" en position x = 1, Y = 0
+
+        //Création des boutons   
+        gbCP.gridy = 0;
         JButton bAddPersonne = new JButton("Ajouter");                          // Créer un bouton "Ajouter"
         bAddPersonne.setSize(100, 50);                                          // de taille 100x50
-        panel.add(bAddPersonne, gbC);                                           // ajoute ce bouton, au panel
+        panelBpersonne.add(bAddPersonne, gbCP);                                 // ajoute ce bouton, au panel
         bAddPersonne.addActionListener((event) -> {                             // Créer une " "micro fonction" " lorsque quelque chose se passe sur le bouton
             //Actions lors des cliques sur le bouton
-            FormPersonne formAddPersonne = new FormPersonne();                  // Ouvre une fenetre AddArticle
+            FormPersonne formAddPersonne = new FormPersonne();                  // Ouvre une fenetre AddPersonne
+            fenetre.dispose();                                                  // Ferme la fenetre
+        });
+        gbCP.gridy = 1;
+        JButton bUpdatePersonne = new JButton("Modifier");                      // Créer un bouton "Modifier"
+        bUpdatePersonne.setSize(100, 50);                                       // de taille 100x50
+        panelBpersonne.add(bUpdatePersonne, gbCP);                              // ajoute ce bouton, au panel
+        //Action Boutons
+        bUpdatePersonne.addActionListener((event) -> {                          // Créer une "micro fonction" " lorsque quelque chose se passe sur le bouton
+            //Actions lors des cliques sur le bouton 
+            FormPersonne formAddPersonne = new FormPersonne(listPersonnes.getSelectedValue());// Ouvre une fenetre AddPersonne
+            fenetre.dispose();                                                  // Ferme la fenetre
+        });
+        gbCP.gridy = 2;
+        JButton bDeletePersonne = new JButton("Supprimer");                     // Créer un bouton "Supprimer"
+        bDeletePersonne.setSize(100, 50);                                       // de taille 100x50
+        panelBpersonne.add(bDeletePersonne, gbCP);                              // ajoute ce bouton, au panel
+        //Action Boutons
+        bDeletePersonne.addActionListener((event) -> {                           // Créer une "micro fonction" " lorsque quelque chose se passe sur le bouton
+            //Actions lors des cliques sur le bouton 
+            dao.deletePersonne(listPersonnes.getSelectedValue());
+            FormFenetre formMain = new FormFenetre();
             fenetre.dispose();                                                  // Ferme la fenetre
         });
 
