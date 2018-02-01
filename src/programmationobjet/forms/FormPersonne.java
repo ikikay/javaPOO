@@ -10,6 +10,8 @@ import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.Insets;
 import java.awt.TextField;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import javax.swing.ButtonGroup;
 import javax.swing.JButton;
@@ -21,42 +23,49 @@ import javax.swing.JRadioButton;
 import static javax.swing.WindowConstants.DISPOSE_ON_CLOSE;
 import programmationobjet.classes.Auteur;
 import programmationobjet.classes.Realisateur;
+import programmationobjet.dao.dao;
 import static programmationobjet.main.ProgrammationObjet.globalLesPersonnes;
-
-
 
 /**
  *
  * @author Ikikay
  */
-public class Personne {
+public class FormPersonne {
 
     //Mes futurs TextField
     TextField tfNom;
     TextField tfPrenom;
+    TextField tfDteNaissance;
+
+    DateTimeFormatter formatterToDate = DateTimeFormatter.ofPattern("d/MM/yyyy");
+//    DateTimeFormatter formatterToString = DateTimeFormatter.ofPattern("dd LLLL yyyy");
+
+    String classePersonne = "default";
 
     ArrayList<String> lesErreurs;
 
     //Constructeur d'Ajout (Première entré dans la fenêtre)
-    public Personne() {
+    public FormPersonne() {
         creationForm();
         //Dao .create();
     }
 
     //Constructeur de Modification
-    public Personne(Object laPersonne) {
-        creationForm();                                                         // Appelle la fonction de création de la fenêtre
-        String laClassePersonne = laPersonne.getClass().toString();             // Permet de savoir si c'est un auteur ou un réalisateur
+    public FormPersonne(Object laPersonne, String typePersonne) {                                                         // Appelle la fonction de création de la fenêtre
+        classePersonne = typePersonne.split("\\.")[typePersonne.split("\\.").length - 1];
+        creationForm();
+        System.out.println();
 
-        switch (laClassePersonne) {
+        switch (classePersonne) {
             case "Auteur":
-                laPersonne = (Auteur) laPersonne;                               // Modifie le type de la variable Personne (que l'ont modifie) en Auteur
+                laPersonne = (Auteur) laPersonne;                               // Modifie le type de la variable FormPersonne (que l'ont modifie) en Auteur
                 Auteur lAuteur = new Auteur();                                  // Créer une variable de type Auteur (pour travailler dessus plutôt que sur laPersonne qui n'est pas parlant)
                 lAuteur = (Auteur) laPersonne;                                  // Met lAuteur (qui est un Auteur) dans la variable lAuteur
 
                 tfNom.setText(lAuteur.getNom());                                // Prérempli les champs avec l'objets actuel
                 tfPrenom.setText(lAuteur.getPrenom());                          // Prérempli les champs avec l'objets actuel
-                
+                tfDteNaissance.setText(lAuteur.getDteNaissance().format(formatterToDate)); // Prérempli les champs avec l'objets actuel      
+
                 break;
             case "Realisateur":
                 laPersonne = (Realisateur) laPersonne;                          // Modifie le type de la variable laPersonne (que l'ont modifie) en Realisateur
@@ -65,11 +74,12 @@ public class Personne {
 
                 tfNom.setText(leRealisateur.getNom());                          // Prérempli les champs avec l'objets actuel
                 tfPrenom.setText(leRealisateur.getPrenom());                    // Prérempli les champs avec l'objets actuel
-               
+                tfDteNaissance.setText(leRealisateur.getDteNaissance().format(formatterToDate)); // Prérempli les champs avec l'objets actuel
+
                 break;
 
             default:                                                            // Si l'objet n'est ni un auteur ni un réalisateur
-                System.out.println(laClassePersonne);
+                System.out.println(classePersonne);
                 break;
         }
         //Dao .update();
@@ -123,8 +133,18 @@ public class Personne {
         tfPrenom = new TextField("", 50);                                       // Créer un Text Field
         panelContenu.add(tfPrenom, gbCC);                                       // le Text Field au panelContenu en position x = 0, Y = 3
 
-        //Création du choix DVD/Livre
+        //Création d'un Label demande de la date de naissance
         gbCC.gridy = 4;
+        JLabel ldteNaissance = new JLabel("Entrez la date de naissance de la personne (jj/mm/yyyy)");               // Créer un label
+        panelContenu.add(ldteNaissance, gbCC);                                           // le label au panelContenu en position x = 0, Y = 4
+
+        //Création d'un TextField de la date de naissance
+        gbCC.gridy = 5;
+        tfDteNaissance = new TextField("", 50);                                 // Créer un Text Field
+        panelContenu.add(tfDteNaissance, gbCC);                                 // le Text Field au panelContenu en position x = 0, Y = 5
+
+        //Création du choix DVD/Livre
+        gbCC.gridy = 6;
         ButtonGroup bg = new ButtonGroup();                                     // Ajoute un groupe de boutons pour lier mes RadioButton
         JPanel lesRadioButton = new JPanel();                                   // Créer un panel contenant les Radion Boutons
         JRadioButton auteur = new JRadioButton("Auteur");                       // Créer un radio bouton "Auteur"
@@ -144,42 +164,43 @@ public class Personne {
         });
 
         //Création des boutons
-        gbCC.gridy = 5;
+        gbCC.gridy = 7;
         JButton bAddPersonne = new JButton("Ajouter");                          // Créer un bouton "Ajouter"
         bAddPersonne.setSize(100, 50);                                          // de taille 100x50
         panelContenu.add(bAddPersonne, gbCC);                                   // ajoute ce bouton, au panelContenu
         bAddPersonne.addActionListener((event) -> {                             // Créer une " "micro fonction" " lorsque quelque chose se passe sur le bouton
             //Actions lors des cliques sur le bouton 
-            checkNom();                                                         // Vérifis les erreurs sur le champs nom
+            checkNom();                                                         // Vérifis les erreurs sur le champ nom
             checkPrenom();                                                      // Vérifis les erreurs sur le champ prenom
+            checkDteNaissance();                                                // Vérifis les erreurs sur le champ date de naissance
 
             if (auteur.isSelected()) {
                 if (lesErreurs.isEmpty()) {                                     // Si il n'y à pas d'erreurs
-                    Auteur lAuteur = new Auteur();
-                    globalLesPersonnes.add(lAuteur);                            // Ajout de l'auteur dans la liste global contenant les auteurs
-                    Fenetre formMain = new Fenetre();                           // Instanciation de Fenetre de 1024x768 avec le titre "Menu"
+                    Auteur lAuteur = new Auteur(tfNom.getText(), tfPrenom.getText(), LocalDate.parse(tfDteNaissance.getText(), formatterToDate));
+                    dao.createAuteur(lAuteur);                          // Ajout de l'auteur dans la liste global contenant les auteurs
+                    FormFenetre formMain = new FormFenetre();                           // Instanciation de FormFenetre de 1024x768 avec le titre "Menu"
                     fenetre.dispose();
                 }
                 showErrors();                                                   // Affiche et vide les erreurs
 
             } else if (realisateur.isSelected()) {
                 if (lesErreurs.isEmpty()) {                                     // Si il n'y à pas d'erreurs
-                    Realisateur leRealisateur = new Realisateur();
-                    globalLesPersonnes.add(leRealisateur);                      // Ajout du réalisateur dans la liste global contenant les réalisateurs
-                    Fenetre formMain = new Fenetre();                           // Instanciation de Fenetre de 1024x768 avec le titre "Menu"
+                    Realisateur leRealisateur = new Realisateur(tfNom.getText(), tfPrenom.getText(), LocalDate.parse(tfDteNaissance.getText(), formatterToDate));
+                    dao.createRealisateur(leRealisateur);                    // Ajout du réalisateur dans la liste global contenant les réalisateurs
+                    FormFenetre formMain = new FormFenetre();                           // Instanciation de FormFenetre de 1024x768 avec le titre "Menu"
                     fenetre.dispose();
                 }
                 showErrors();                                                   // Affiche et vide les erreurs
             }
         });
 
-        gbCC.gridy = 6;
+        gbCC.gridy = 8;
         JButton bRetour = new JButton("Retour");                                // Créer un bouton "Retour"
         bRetour.setSize(100, 50);                                               // de taille 100x50
         panelContenu.add(bRetour, gbCC);                                        // ajoute ce bouton, au panelContenu
         bRetour.addActionListener((event) -> {                                  // Créer une " "micro fonction" " lorsque quelque chose se passe sur le bouton
             //Actions lors des cliques sur le bouton 
-            Fenetre formMain = new Fenetre();                                   // Instanciation de Fenetre avec le titre "Menu"
+            FormFenetre formMain = new FormFenetre();                                   // Instanciation de FormFenetre avec le titre "Menu"
             fenetre.dispose();                                                  // Ferme la fenetre
         });
 
@@ -190,6 +211,17 @@ public class Personne {
         fenetre.add(panel);                                                     // Ajoute le JPanel (panelContenu) au JFrame (fenetre)
         fenetre.pack();                                                         //
         fenetre.setVisible(true);                                               // Rend la fenêtre visible
+
+        if (classePersonne.equals("Auteur")) {
+            auteur.setSelected(true);
+            System.out.println("OK !");
+        } else if (classePersonne.equals("Realisateur")) {
+            realisateur.setSelected(true);
+            System.out.println("OK !");
+        } else {
+            System.out.println(classePersonne);
+        }
+
     }
 
     // *************************************
@@ -200,7 +232,9 @@ public class Personne {
         for (String erreur : lesErreurs) {                                      // Fusionne toutes les erreurs
             errorsString = errorsString + erreur + "\n";                        // en une seul variable
         }
-        JOptionPane.showMessageDialog(null, errorsString, "Erreurs", JOptionPane.OK_OPTION);// Affiche les erreurs
+        if (!lesErreurs.isEmpty()) {
+            JOptionPane.showMessageDialog(null, errorsString, "Erreurs", JOptionPane.OK_OPTION);// Affiche les erreurs
+        }
         lesErreurs.removeAll(lesErreurs);                                       // Vide la liste des erreurs
 
     }
@@ -213,7 +247,13 @@ public class Personne {
 
     public void checkPrenom() {                                                 // Fonction de vérification du champs prenom
         if (tfPrenom.getText().length() < 1) {                                  // Si le champs Désignation contient moins de 1 charactère (=> en gros si il est vide)
-            lesErreurs.add("Champ du prénom vide.");                             // Ajoute une erreur "champ vide"
+            lesErreurs.add("Champ du prénom vide.");                            // Ajoute une erreur "champ vide"
+        }
+    }
+
+    public void checkDteNaissance() {                                           // Fonction de vérification du champs prenom
+        if (tfDteNaissance.getText().length() < 1) {                            // Si le champs Désignation contient moins de 1 charactère (=> en gros si il est vide)
+            lesErreurs.add("Champ de la date de naissance vide.");              // Ajoute une erreur "champ vide"
         }
     }
 }

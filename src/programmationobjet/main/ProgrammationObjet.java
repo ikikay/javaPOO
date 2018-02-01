@@ -5,11 +5,12 @@
  */
 package programmationobjet.main;
 
+import java.time.LocalDate;
 import programmationobjet.classes.*;
 
-import java.time.LocalDate;
 import java.util.ArrayList;
-import programmationobjet.forms.Fenetre;
+import programmationobjet.dao.dao;
+import programmationobjet.forms.FormFenetre;
 
 /**
  *
@@ -17,73 +18,105 @@ import programmationobjet.forms.Fenetre;
  */
 public class ProgrammationObjet {
 
-    public static ArrayList<Article> globalLesArticles;             // Créer une liste qui sera accessible partout
-    public static ArrayList<Personne> globalLesPersonnes;           // Créer une liste qui sera accessible partout
+    public static ArrayList<Article> globalLesArticles;                         // Créer une liste qui sera accessible partout
+    public static ArrayList<Personne> globalLesPersonnes;                       // Créer une liste qui sera accessible partout
+
+    public static String classForName = "com.mysql.jdbc.Driver";
+    public static String host = "localhost";
+    public static String port = "3306";
+    public static String db = "S04_projet";
+    public static String user = "root";
+    public static String mdp = "";
+
+    //Création de la BDD
+    public static String createPersonnetSql
+            = "CREATE TABLE Personne ( "
+            + "`ID_Personne` INT NOT NULL AUTO_INCREMENT , "
+            + "`Nom` VARCHAR(255) NOT NULL , "
+            + "`Prenom` VARCHAR(255) NOT NULL , "
+            + "`DteNaissance` DATE NOT NULL , "
+            + "PRIMARY KEY (`ID_Personne`)) ENGINE = InnoDB;";
+    public static String createAuteurSql
+            = "CREATE TABLE Auteur ( "
+            +"`ID_Auteur` INT NOT NULL AUTO_INCREMENT, "
+            +"`FK_ID_Personne` INT NOT NULL  , "
+            +"PRIMARY KEY (`ID_Auteur`)) ENGINE = InnoDB;";
+    public static String createRealisateurSql
+            = "CREATE TABLE Realisateur ( "
+            +"`ID_Realisateur` INT NOT NULL AUTO_INCREMENT , "
+            +"`FK_ID_Personne` INT NOT NULL  , "
+            +"PRIMARY KEY (`ID_Realisateur`)) ENGINE = InnoDB;";
+    public static String createArticleSql
+            = "CREATE TABLE Article ( "
+            +"`ID_Article` INT NOT NULL AUTO_INCREMENT , "
+            +"`Reference` VARCHAR(255) NOT NULL , "
+            +"`Designation` VARCHAR(255) NOT NULL , "
+            +"`Prix` DOUBLE NOT NULL , "
+            +"PRIMARY KEY (`ID_Article`)) ENGINE = InnoDB;";
+    private static String createDvdSql
+            = "CREATE TABLE Dvd ( "
+            +"`ID_Dvd` INT NOT NULL AUTO_INCREMENT , "
+            +"`Duree` DOUBLE NOT NULL , "
+            +"`FK_ID_Article` INT NOT NULL ,  "
+            +"`FK_ID_Realisateur` INT NOT NULL , "
+            +"PRIMARY KEY (`ID_Dvd`)) ENGINE = InnoDB;";
+    private static String createLivreSql
+            = "CREATE TABLE Livre ( "
+            +"`ID_Livre` INT NOT NULL AUTO_INCREMENT , "
+            +"`Isbn` VARCHAR(255) NOT NULL , "
+            +"`NbrPages` INT NOT NULL, "
+            +"`FK_ID_Article` INT NOT NULL  , "
+            +"`FK_ID_Auteur` INT NOT NULL , "
+            +"PRIMARY KEY (`ID_Livre`)) ENGINE = InnoDB;";
+    private static String alterAuteurFkPersonne
+            = "ALTER TABLE `auteur` ADD CONSTRAINT `FK_ID_Personne_On_Auteur` "
+            +"FOREIGN KEY (`FK_ID_Personne`) REFERENCES `personne`(`ID_Personne`) "
+            +"ON DELETE RESTRICT ON UPDATE RESTRICT;";
+    private static String alterRealisateurFkPersonne
+            = "ALTER TABLE `realisateur` ADD CONSTRAINT `FK_ID_Personne_On_Realisateur` "
+            +"FOREIGN KEY (`FK_ID_Personne`) REFERENCES `personne`(`ID_Personne`) "
+            +"ON DELETE RESTRICT ON UPDATE RESTRICT;";
+    private static String alterDvdFkArticle
+            = "ALTER TABLE `dvd` ADD CONSTRAINT `FK_ID_Article_On_Dvd` "
+            +"FOREIGN KEY (`FK_ID_Article`) REFERENCES `article`(`ID_Article`) "
+            +"ON DELETE RESTRICT ON UPDATE RESTRICT;";
+    private static String alterDvdFkRealisateur
+            = "ALTER TABLE `dvd` ADD CONSTRAINT `FK_ID_Realisateur_On_Dvd` "
+            +"FOREIGN KEY (`FK_ID_Realisateur`) REFERENCES `realisateur`(`ID_Realisateur`) "
+            +"ON DELETE RESTRICT ON UPDATE RESTRICT;";
+    private static String alterLivreArticle
+            = "ALTER TABLE `livre` ADD CONSTRAINT `FK_ID_Article_On_Livre` "
+            +"FOREIGN KEY (`FK_ID_Article`) REFERENCES `article`(`ID_Article`) "
+            +"ON DELETE RESTRICT ON UPDATE RESTRICT;";
+    private static String alterLivreFkAuteur
+            = "ALTER TABLE `livre` ADD CONSTRAINT `FK_ID_Auteur_On_Livre` "
+            +"FOREIGN KEY (`FK_ID_Auteur`) REFERENCES `auteur`(`ID_Auteur`) "
+            +"ON DELETE RESTRICT ON UPDATE RESTRICT;";
+    
 
     /**
      * @param args the command line arguments
      */
     public static void main(String[] args) {
-        globalLesArticles = new ArrayList<>();                      // Instancie la liste global
-        globalLesPersonnes = new ArrayList<>();                     // Instancie la liste global
-
-        //Création d'un jeu de test
-        Realisateur rea = new Realisateur("Lucas", "Georges", LocalDate.of(1944, 04, 14));
-        Auteur aut = new Auteur("Terry", "Goodkind", LocalDate.of(1962, 10, 01));        
-        Dvd dvd = new Dvd("Star Wars I", "La Menace Fantome", 10.0, 2.16, "Georges Lucas");
-        Livre livre = new Livre("L'épée de vérité", "La Première leçon du sorcier", 10.0, "2811211187", 532 ,"Terry GOODKIND");
-        // Ajoute le DVD au réalisateur, et le livre à l'auteur
-        rea.getLesDvd().add(dvd);
-        aut.getLesLivres().add(livre);
-
-        //Ajoute les éléments ci-dessus à la liste global
-        globalLesArticles.add(dvd);
-        globalLesArticles.add(livre);
-        globalLesPersonnes.add(rea);
-        globalLesPersonnes.add(aut);
+        dao.setClassForName(classForName);
+        dao.setConnection(host, port, db, user, mdp);
         
-        Fenetre formMain = new Fenetre();                           // Instanciation de Fenetre avec le titre "Menu"
+        // Création des tables et des clefs étrangères 
         
-        /* Premier exercice, commenté car devenu inutile
-        JFrame formMain = new JFrame();                             // Création d'un JFrame nommé formMain
-        JPanel panel = new JPanel();                                // Création d'un JPanel nommé panel
-
-        //Création de la fenêtre principal
-        formMain.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE); // Ferme l'application si la dernière fenêtre est fermé
-        formMain.setTitle("Menu");                                  // Met le titre "Menu" à la fenêtre
-        formMain.setBounds(25, 25, 1024, 768);                      // Créer une fenêtre de 768x1024 avec 25 de marges
-        formMain.setLocationRelativeTo(null);                       // Centre la fenêtre
-
-        //Création des boutons 
-        JButton boutonRouge = new JButton("Rouge");                 // Créer un bouton "boutonRouge"
-        boutonRouge.setSize(100, 50);                               // de taille 100x50
-        panel.add(boutonRouge);                                     // ajoute ce bouton, au panel
-
-        JButton boutonVert = new JButton("Vert");                   // Créer un bouton
-        boutonVert.setSize(100, 50);                                // de taille 100x50
-        panel.add(boutonVert);                                      // ajoute ce bouton, au panel
-
-        JButton boutonBleu = new JButton("Bleu");                   // Créer un bouton
-        boutonBleu.setSize(100, 50);                                // de taille 100x50
-        panel.add(boutonBleu);                                      // ajoute ce bouton, au panel
-
-        //Action Boutons
-        boutonRouge.addActionListener((event) -> {                  // Créer une " "micro fonction" " lorsque quelque chose se passe sur le bouton
-            //Actions lors des cliques sur le bouton 
-            panel.setBackground(Color.red);                         // Met le fond en rouge
-        });
-        boutonVert.addActionListener((event) -> {                   // Créer une " "micro fonction" " lorsque quelque chose se passe sur le bouton
-            //Actions lors des cliques sur le bouton
-            panel.setBackground(Color.green);                       // Met le fond en Vert
-        });
-        boutonBleu.addActionListener((event) -> {                   // Créer une " "micro fonction" " lorsque quelque chose se passe sur le bouton
-            //Actions lors des cliques sur le bouton
-            panel.setBackground(Color.blue);                        // Met le fond en Bleu
-        });
-         
-        formMain.getContentPane().add(panel);                       // Met le Panel à la fenêtre
-        formMain.setVisible(true);                                  // Rend la fenêtre principal visible
-        */
+        dao.executeSql(createPersonnetSql);
+        dao.executeSql(createAuteurSql);
+        dao.executeSql(createRealisateurSql);
+        dao.executeSql(createArticleSql);
+        dao.executeSql(createDvdSql);
+        dao.executeSql(createLivreSql);
+        dao.executeSql(alterAuteurFkPersonne);
+        dao.executeSql(alterRealisateurFkPersonne);
+        dao.executeSql(alterDvdFkArticle);
+        dao.executeSql(alterDvdFkRealisateur);
+        dao.executeSql(alterLivreArticle);
+        dao.executeSql(alterLivreFkAuteur);
+        
+        FormFenetre formMain = new FormFenetre();                                       // Instanciation de FormFenetre avec le titre "Menu"
     }
 
 }

@@ -11,17 +11,26 @@ package programmationobjet.classes;
  */
 public class Dvd extends Article {
 
+    private int id_Dvd;
     private double duree;
-    private String Realisateur;
+    private Realisateur Realisateur;
 
     // --------------------------------------------------------------------
     // Constructeur :
     // --------------------------------------------------------------------
     public Dvd() {
-        super(null, null, 0);
     }
 
-    public Dvd(String reference, String designation, double prix, double duree, String Realisateur) {
+    //Constructeur avec ID de la BDD
+    public Dvd(int id_Dvd, double duree, Realisateur Realisateur, int id, String reference, String designation, double prix) {
+        super(id, reference, designation, prix);
+        this.id_Dvd = id_Dvd;
+        this.duree = duree;
+        this.Realisateur = Realisateur;
+    }
+    
+    //Constructeur de l'objet Avant insertion BDD
+        public Dvd(double duree, Realisateur Realisateur, String reference, String designation, double prix) {
         super(reference, designation, prix);
         this.duree = duree;
         this.Realisateur = Realisateur;
@@ -30,6 +39,14 @@ public class Dvd extends Article {
     // --------------------------------------------------------------------
     // Accesseurs :
     // --------------------------------------------------------------------
+    public int getId_Dvd() {
+        return id_Dvd;
+    }
+
+    public void setId_Dvd(int id_Dvd) {
+        this.id_Dvd = id_Dvd;
+    }
+
     public double getDuree() {
         return duree;
     }
@@ -38,11 +55,11 @@ public class Dvd extends Article {
         this.duree = duree;
     }
 
-    public String getRealisateur() {
+    public Realisateur getRealisateur() {
         return Realisateur;
     }
 
-    public void setRealisateur(String Realisateur) {
+    public void setRealisateur(Realisateur Realisateur) {
         this.Realisateur = Realisateur;
     }
 

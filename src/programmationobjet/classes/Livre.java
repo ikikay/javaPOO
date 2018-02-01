@@ -11,27 +11,46 @@ package programmationobjet.classes;
  */
 public class Livre extends Article {
 
+    private int id_Livre;
     private String isbn;
     private int nbrPages;
-    private String Auteur;
+    private Auteur Auteur;
 
     // --------------------------------------------------------------------
     // Constructeur :
     // --------------------------------------------------------------------
     public Livre() {
-        super(null, null, 0);
     }
-
-    public Livre(String reference, String designation, double prix, String isbn, int nbrPages, String Auteur) {
+    
+    //Constructeur avec ID de la BDD
+    public Livre(int id_Livre, String isbn, int nbrPages, Auteur Auteur, int id, String reference, String designation, double prix) {
+        super(id, reference, designation, prix);
+        this.id_Livre = id_Livre;
+        this.isbn = isbn;
+        this.nbrPages = nbrPages;
+        this.Auteur = Auteur;
+    }
+    
+    //Constructeur de l'objet Avant insertion BDD
+    public Livre(String isbn, int nbrPages, Auteur Auteur, String reference, String designation, double prix) {
         super(reference, designation, prix);
         this.isbn = isbn;
         this.nbrPages = nbrPages;
         this.Auteur = Auteur;
     }
+    
 
     // --------------------------------------------------------------------
     // Accesseurs :
     // --------------------------------------------------------------------
+    public int getId_Livre() {
+        return id_Livre;
+    }
+
+    public void setId_Livre(int id_Livre) {
+        this.id_Livre = id_Livre;
+    }
+
     public String getIsbn() {
         return isbn;
     }
@@ -48,11 +67,11 @@ public class Livre extends Article {
         this.nbrPages = nbrPages;
     }
 
-    public String getAuteur() {
+    public Auteur getAuteur() {
         return Auteur;
     }
 
-    public void setAuteur(String Auteur) {
+    public void setAuteur(Auteur Auteur) {
         this.Auteur = Auteur;
     }
 

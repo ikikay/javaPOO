@@ -11,6 +11,7 @@ package programmationobjet.classes;
  */
 public abstract class Article {
 
+    private int id_Article;
     private String reference;
     private String designation;
     private double prix;
@@ -18,6 +19,18 @@ public abstract class Article {
     // --------------------------------------------------------------------
     // Constructeur :
     // --------------------------------------------------------------------
+    public Article() {
+    }
+
+    //Constructeur avec ID de la BDD
+    public Article(int id, String reference, String designation, double prix) {
+        this.id_Article = id;
+        this.reference = reference;
+        this.designation = designation;
+        this.prix = prix;
+    }
+
+    //Constructeur de l'objet Avant insertion BDD
     public Article(String reference, String designation, double prix) {
         this.reference = reference;
         this.designation = designation;
@@ -27,6 +40,14 @@ public abstract class Article {
     // --------------------------------------------------------------------
     // Accesseurs :
     // --------------------------------------------------------------------
+    public int getId_Article() {
+        return id_Article;
+    }
+
+    public void setId_Article(int id_Article) {
+        this.id_Article = id_Article;
+    }
+
     public String getReference() {
         return reference;
     }

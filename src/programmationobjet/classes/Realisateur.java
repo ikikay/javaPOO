@@ -14,29 +14,48 @@ import java.util.ArrayList;
  */
 public class Realisateur extends Personne {
 
+    private int id_Realisateur;
     private ArrayList<Dvd> lesDvd;
 
     // --------------------------------------------------------------------
     // Constructeur :
     // --------------------------------------------------------------------
     public Realisateur() {
-        super(null, null, null);
     }
 
+    //Constructeur avec ID de la BDD
+    public Realisateur(int id_Realisateur, int id, String nom, String prenom, LocalDate dteNaissance) {
+        super(id, nom, prenom, dteNaissance);
+        this.id_Realisateur = id_Realisateur;
+    }
+    
+    //Constructeur de l'objet Avant insertion BDD
     public Realisateur(String nom, String prenom, LocalDate dteNaissance) {
         super(nom, prenom, dteNaissance);
-        this.lesDvd = new ArrayList<Dvd>();
     }
+    
 
     // --------------------------------------------------------------------
     // Accesseurs :
     // --------------------------------------------------------------------
+    public int getId_Realisateur() {
+        return id_Realisateur;
+    }
+
+    public void setId_Realisateur(int id_Realisateur) {
+        this.id_Realisateur = id_Realisateur;
+    }
+
     public ArrayList<Dvd> getLesDvd() {
         return lesDvd;
     }
 
     public void setLesDvd(ArrayList<Dvd> lesDvd) {
         this.lesDvd = lesDvd;
+    }
+
+    public String getClassToString() {
+        return "Realisateur";
     }
 
     @Override

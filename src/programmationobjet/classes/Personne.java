@@ -6,6 +6,7 @@
 package programmationobjet.classes;
 
 import java.time.LocalDate; //dteNaissance
+import java.time.format.DateTimeFormatter;
 
 /**
  *
@@ -13,6 +14,7 @@ import java.time.LocalDate; //dteNaissance
  */
 public abstract class Personne {
 
+    private int id_Personne;
     private String nom;
     private String prenom;
     private LocalDate dteNaissance;
@@ -20,15 +22,36 @@ public abstract class Personne {
     // --------------------------------------------------------------------
     // Constructeur :
     // --------------------------------------------------------------------
+    public Personne() {
+    }
+
+    //Constructeur avec ID de la BDD
+    public Personne(int id, String nom, String prenom, LocalDate dteNaissance) {
+        this.id_Personne = id;
+        this.nom = nom;
+        this.prenom = prenom;
+        this.dteNaissance = dteNaissance;
+    }
+    
+    //Constructeur de l'objet Avant insertion BDD
     public Personne(String nom, String prenom, LocalDate dteNaissance) {
         this.nom = nom;
         this.prenom = prenom;
         this.dteNaissance = dteNaissance;
     }
+    
 
     // --------------------------------------------------------------------
     // Accesseurs :
     // --------------------------------------------------------------------
+    public int getId_Personne() {
+        return id_Personne;
+    }
+
+    public void setId_Personne(int id_Personne) {
+        this.id_Personne = id_Personne;
+    }
+
     public String getNom() {
         return nom;
     }
@@ -55,6 +78,7 @@ public abstract class Personne {
 
     @Override
     public String toString() {
-        return this.getNom() + " " + this.getPrenom();
+        DateTimeFormatter formatterToDate = DateTimeFormatter.ofPattern("d/MM/yyyy");
+        return this.getNom() + " " + this.getPrenom() + " " + this.getDteNaissance().format(formatterToDate);
     }
 }

@@ -14,23 +14,38 @@ import java.util.ArrayList; // lesLivres
  */
 public class Auteur extends Personne {
 
+    private int id_Auteur;
     private ArrayList<Livre> lesLivres;
 
     // --------------------------------------------------------------------
     // Constructeur :
     // --------------------------------------------------------------------
     public Auteur() {
-        super(null, null, null);
     }
 
+    //Constructeur avec ID de la BDD
+    public Auteur(int id_Auteur, int id, String nom, String prenom, LocalDate dteNaissance) {
+        super(id, nom, prenom, dteNaissance);
+        this.id_Auteur = id_Auteur;
+    }
+    
+    //Constructeur de l'objet Avant insertion BDD
     public Auteur(String nom, String prenom, LocalDate dteNaissance) {
         super(nom, prenom, dteNaissance);
-        this.lesLivres = new ArrayList<Livre>();
     }
+    
 
     // --------------------------------------------------------------------
     // Accesseurs :
     // --------------------------------------------------------------------
+    public int getId_Auteur() {
+        return id_Auteur;
+    }
+
+    public void setId_Auteur(int id_Auteur) {
+        this.id_Auteur = id_Auteur;
+    }
+
     public ArrayList<Livre> getLesLivres() {
         return lesLivres;
     }
@@ -38,9 +53,13 @@ public class Auteur extends Personne {
     public void setLesLivres(ArrayList<Livre> lesLivres) {
         this.lesLivres = lesLivres;
     }
-    
+
+    public String getClassToString() {
+        return "Auteur";
+    }
+
     @Override
-    public String toString(){
+    public String toString() {
         return super.toString();
     }
 }

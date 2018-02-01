@@ -9,20 +9,24 @@ import programmationobjet.main.ProgrammationObjet;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.Insets;
+import java.util.ArrayList;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JList;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import static javax.swing.WindowConstants.DISPOSE_ON_CLOSE;
+import programmationobjet.classes.Article;
+import programmationobjet.classes.Personne;
+import programmationobjet.dao.dao;
 
 /**
  *
  * @author Ikikay
  */
-public class Fenetre {
+public class FormFenetre {
 
-    public Fenetre() {
+    public FormFenetre() {
         JFrame fenetre = new JFrame();                                          // Création d'un JFrame
         fenetre.setTitle("Menu");                                               // Applique le titre à la fenêtre
         fenetre.setBounds(25, 25, 100, 100);                                    // Fait une fenêtre de largeur x hauteur avec 25 de marge
@@ -37,15 +41,21 @@ public class Fenetre {
         //Création de la liste d'articles
         gbC.gridx = 0;
         gbC.gridy = 0;
-        JList listArticles = new JList(ProgrammationObjet.globalLesArticles.toArray());     // Création d'une JList avec les articles
-        panel.add(new JScrollPane(listArticles), gbC);                                      // Ajoute un scrollbar + la liste des articles au panel
+        ArrayList<Article> lesArticles = new ArrayList();
+        lesArticles.addAll(dao.getAllDvd());
+        lesArticles.addAll(dao.getAllLivre());
+        JList listArticles = new JList(lesArticles.toArray());                  // Création d'une JList avec les articles
+        panel.add(new JScrollPane(listArticles), gbC);                          // Ajoute un scrollbar + la liste des articles au panel
 
         //Création de la liste de personnes
         gbC.gridx = 0;
         gbC.gridy = 1;
-        JList listPersonnes = new JList(ProgrammationObjet.globalLesPersonnes.toArray());   // Création d'une JList avec les personnes
-        panel.add(new JScrollPane(listPersonnes), gbC);                                     // Ajoute un scrollbar + la liste des personnes au panel
-
+        ArrayList<Personne> lesPersonnes = new ArrayList();
+        lesPersonnes.addAll(dao.getAllAuteur());
+        lesPersonnes.addAll(dao.getAllRealisateur());
+        JList listPersonnes = new JList(lesPersonnes.toArray());                // Création d'une JList avec les personnes
+        panel.add(new JScrollPane(listPersonnes), gbC);                         // Ajoute un scrollbar + la liste des personnes au panel
+        
         //Création des boutons
         gbC.gridx = 1;
         gbC.gridy = 0;
@@ -55,7 +65,7 @@ public class Fenetre {
         //Action Boutons
         bAddArticle.addActionListener((event) -> {                              // Créer une " "micro fonction" " lorsque quelque chose se passe sur le bouton
             //Actions lors des cliques sur le bouton 
-            Article formAddArticle = new Article();                             // Ouvre une fenetre AddArticle
+            FormArticle formAddArticle = new FormArticle();                             // Ouvre une fenetre AddArticle
             fenetre.dispose();                                                  // Ferme la fenetre
         });
 
@@ -66,8 +76,8 @@ public class Fenetre {
         bAddPersonne.setSize(100, 50);                                          // de taille 100x50
         panel.add(bAddPersonne, gbC);                                           // ajoute ce bouton, au panel
         bAddPersonne.addActionListener((event) -> {                             // Créer une " "micro fonction" " lorsque quelque chose se passe sur le bouton
-            //Actions lors des cliques sur le bouton 
-            Personne formAddPersonne = new Personne();                          // Ouvre une fenetre AddArticle
+            //Actions lors des cliques sur le bouton
+            FormPersonne formAddPersonne = new FormPersonne();                  // Ouvre une fenetre AddArticle
             fenetre.dispose();                                                  // Ferme la fenetre
         });
 
